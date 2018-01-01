@@ -81,7 +81,7 @@ def webhook():
         data = "{" + request.args.get('validationToken') + "}"
         rv = (data, 200, {'Content-Type':'text/plain'})
         resp = make_response(rv)
-        print resp
+        print resp.data
         #resp = Response(response=js, status=200, content_type='text/plain')
         return resp
         
