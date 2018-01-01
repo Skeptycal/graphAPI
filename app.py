@@ -99,7 +99,7 @@ def graphcall():
             }
     graphdata = MSGRAPH.get(endpoint, headers=headers).data
     response = MSGRAPH.post('/subscriptions',headers={'Content-type':'application/json'}, data=data)
-    print dir(response)
+    print response.data, response.status
     return render_template('graphcall.html',
                                  graphdata=graphdata,
                                  endpoint=RESOURCE + API_VERSION + '/' + endpoint,
