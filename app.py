@@ -45,22 +45,22 @@ MSGRAPH = OAUTH.remote_app(
 @app.route('/welcome')
 def homepage():
     """Render the home page."""
-    return flask.render_template('homepage.html', sample='Flask-OAuthlib')
+    return render_template('homepage.html', sample='Flask-OAuthlib')
 
 @app.route('/login')
 def login():
     """Prompt user to authenticate."""
-    flask.session['state'] = str(uuid.uuid4())
-    return MSGRAPH.authorize(callback=config.REDIRECT_URI, state=flask.session['state'])
+    session['state'] = str(uuid.uuid4())
+    return MSGRAPH.authorize(callback=config.REDIRECT_URI, state=session['state'])
 
 @app.route('/login/authorized')
 def authorized():
     """Handler for the application's Redirect Uri."""
-    if str(flask.session['state']) != str(flask.request.args['state']):
+    if str(session['state']) != str(request.args['state']):
         raise Exception('state returned to redirect URL does not match!')
     response = MSGRAPH.authorized_response()
-    flask.session['access_token'] = response['access_token']
-    return flask.redirect('/graphcall')
+    session['access_token'] = response['access_token']
+    return redirect('/graphcall')
 
 
 def validate_request():
@@ -98,7 +98,7 @@ def graphcall():
             }
     graphdata = MSGRAPH.get(endpoint, headers=headers).data
     print MSGRAPH.post('/subscriptions',headers={'Content-type':'application/json'}, data=data).data
-    return flask.render_template('graphcall.html',
+    return render_template('graphcall.html',
                                  graphdata=graphdata,
                                  endpoint=config.RESOURCE + config.API_VERSION + '/' + endpoint,
                                  sample='Flask-OAuthlib')
@@ -106,7 +106,7 @@ def graphcall():
 @MSGRAPH.tokengetter
 def get_token():
     """Called by flask_oauthlib.client to retrieve current access token."""
-    return (flask.session.get('access_token'), '')
+    return (session.get('access_token'), '')
 
 if __name__ == '__main__':
     app.run()
