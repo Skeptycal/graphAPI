@@ -99,7 +99,7 @@ def graphcall():
             "clientState": "client-specific string"
             }"""
     graphdata = MSGRAPH.get(endpoint, headers=headers).data
-    response = MSGRAPH.post('subscriptions',headers={'Content-type':'application/json'}, data=data)
+    response = MSGRAPH.post('subscriptions',headers={'Content-type':'application/json'})
     print response.data, response.status
     return render_template('graphcall.html',
                                  graphdata=graphdata,
