@@ -96,7 +96,7 @@ def graphcall():
             "notificationUrl": "https://onedrive-votiro.herokuapp.com/webhook",
             "resource": "/me/drive/root",
             "expirationDateTime": "2018-05-05T11:23:00.000Z",
-            "clientState": "client-specific string"
+            "clientState": "VOTIRO"
             }"""
     print json.loads(data)
     graphdata = MSGRAPH.get(endpoint, headers=headers).data
