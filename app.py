@@ -100,13 +100,13 @@ def graphcall():
     data = """{"changeType": "updated",
             "notificationUrl": "https://onedrive-votiro.herokuapp.com/webhook",
             "resource": "/me/drive/root",
-            "expirationDateTime": "2018-05-05T11:23:00.000Z",
+            "expirationDateTime": "2018-02-02T11:23:00.000Z",
             "clientState": "VOTIRO"
             }"""
-    print json.loads(data)
+
     graphdata = MSGRAPH.get(endpoint, headers=headers).data
     response = MSGRAPH.post('subscriptions',content_type='application/json', data = data)
-    print response.data, response.status
+
     return render_template('graphcall.html',
                                  graphdata=graphdata,
                                  endpoint=RESOURCE + API_VERSION + '/' + endpoint,
