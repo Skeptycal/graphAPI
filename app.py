@@ -100,7 +100,7 @@ def graphcall():
             }"""
     print json.loads(data)
     graphdata = MSGRAPH.get(endpoint, headers=headers).data
-    response = MSGRAPH.post('subscriptions',content_type'application/json', data = json.loads(data))
+    response = MSGRAPH.post('subscriptions',content_type='application/json', data = json.loads(data))
     print response.data, response.status
     return render_template('graphcall.html',
                                  graphdata=graphdata,
