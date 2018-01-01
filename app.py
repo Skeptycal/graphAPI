@@ -78,8 +78,12 @@ def validate_request():
 def webhook():
     '''Respond to the webhook challenge (POST request) by echoing back the challenge parameter.'''
     print 'in webhook'
-    if request.args.has_key('validationtoken'): return request.args.get('validationtoken')
-    if not validate_request(): abort(403)
+    if request.args.has_key('validationtoken'):
+        js = """{{0}}""".format(request.args.get('validationtoken'))
+        resp = Response(js, status=200, mimetype='text/plain')
+        return resp
+        
+    elif not validate_request(): abort(403)
     return 
 
 @app.route('/graphcall')
