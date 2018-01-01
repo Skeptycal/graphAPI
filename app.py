@@ -99,7 +99,7 @@ def graphcall():
             "clientState": "client-specific string"
             }"""
     graphdata = MSGRAPH.get(endpoint, headers=headers).data
-    response = MSGRAPH.post('subscriptions',headers={'Content-type':'application/json'}, data = {"resource": "/me/drive/root","expirationDateTime": "2018-05-05T11:23:00.000Z"})
+    response = MSGRAPH.post('subscriptions',headers={'Content-type':'application/json'}, data = {"expirationDateTime": "2018-05-05T11:23:00.000Z"})
     print response.data, response.status
     return render_template('graphcall.html',
                                  graphdata=graphdata,
