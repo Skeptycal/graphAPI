@@ -12,7 +12,7 @@ redis_client = redis.from_url(redis_url)
  
 CLIENT_ID = os.environ['CLIENT_ID']
 CLIENT_SECRET = os.environ['CLIENT_SECRET']
-REDIRECT_URI = 'http://onedrive-votiro.herokuapp.com/login/authorized'
+REDIRECT_URI = 'https://onedrive-votiro.herokuapp.com/login/authorized'
 RESOURCE = 'https://graph.microsoft.com/'
 API_VERSION = 'v1.0'
 SCOPES = ['User.Read'] # Add other scopes/permissions as needed.
