@@ -92,12 +92,12 @@ def graphcall():
                'client-request-id': str(uuid.uuid4()),
                'return-client-request-id': 'true'
                }
-    data = {'changeType': "updated",
-               'notificationUrl': "https://onedrive-votiro.herokuapp.com/webhook",
-               'resource': "/me/drive/root",
-               'expirationDateTime': "2018-05-05T11:23:00.000Z",
-               'clientState': "client-specific string"
-            }
+    data = """{"changeType": "updated",
+            "notificationUrl": "https://onedrive-votiro.herokuapp.com/webhook",
+            "resource": "/me/drive/root",
+            "expirationDateTime": "2018-05-05T11:23:00.000Z",
+            "clientState": "client-specific string"
+            }"""
     graphdata = MSGRAPH.get(endpoint, headers=headers).data
     response = MSGRAPH.post('subscriptions',headers={'Content-type':'application/json'}, data=json.loads(data))
     print response.data, response.status
