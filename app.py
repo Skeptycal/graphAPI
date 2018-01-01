@@ -78,7 +78,7 @@ def validate_request():
 def webhook():
     '''Respond to the webhook challenge (POST request) by echoing back the challenge parameter.'''
     if request.args.has_key('validationToken'):
-        js = """{{0}}""".format(request.args.get('validationToken'))
+        js = "{" + request.args.get('validationToken')) + "}"
         print js
         resp = Response(response=js, status=200, content_type='text/plain')
         return resp
