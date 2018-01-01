@@ -5,6 +5,7 @@ import uuid
 import redis
 from flask import *
 import os
+import json
 from flask_oauthlib.client import OAuth
 
 redis_url = os.environ['REDISTOGO_URL']
@@ -98,7 +99,7 @@ def graphcall():
                'clientState': "client-specific string"
             }
     graphdata = MSGRAPH.get(endpoint, headers=headers).data
-    response = MSGRAPH.post('subscriptions',headers={'Content-type':'application/json'}, data=data)
+    response = MSGRAPH.post('subscriptions',headers={'Content-type':'application/json'}, data=json.loads(data))
     print response.data, response.status
     return render_template('graphcall.html',
                                  graphdata=graphdata,
