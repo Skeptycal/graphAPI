@@ -51,7 +51,7 @@ def homepage():
 def login():
     """Prompt user to authenticate."""
     session['state'] = str(uuid.uuid4())
-    return MSGRAPH.authorize(callback=config.REDIRECT_URI, state=session['state'])
+    return MSGRAPH.authorize(callback=REDIRECT_URI, state=session['state'])
 
 @app.route('/login/authorized')
 def authorized():
@@ -100,7 +100,7 @@ def graphcall():
     print MSGRAPH.post('/subscriptions',headers={'Content-type':'application/json'}, data=data).data
     return render_template('graphcall.html',
                                  graphdata=graphdata,
-                                 endpoint=config.RESOURCE + config.API_VERSION + '/' + endpoint,
+                                 endpoint=RESOURCE + API_VERSION + '/' + endpoint,
                                  sample='Flask-OAuthlib')
 
 @MSGRAPH.tokengetter
