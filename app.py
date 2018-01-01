@@ -74,8 +74,9 @@ def validate_request():
         return True
 
 @app.route('/webhook', methods=['POST'])
-def challenge():
+def webhook():
     '''Respond to the webhook challenge (POST request) by echoing back the challenge parameter.'''
+    print 'in webhook'
     if request.args.has_key(validationtoken): return request.args.get('validationtoken')
     if not validate_request(): abort(403)
     return 
@@ -91,7 +92,7 @@ def graphcall():
                'return-client-request-id': 'true'
                }
     data = {'changeType': "updated",
-               'notificationUrl': "https://localhost:5000/webhook",
+               'notificationUrl': "https://onedrive-votiro.herokuapp.com/webhook",
                'resource': "/me/drive/root",
                'expirationDateTime': "2018-01-05T11:23:00.000Z",
                'clientState': "client-specific string"
