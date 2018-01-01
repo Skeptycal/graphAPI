@@ -43,7 +43,7 @@ MSGRAPH = OAUTH.remote_app(
     access_token_url=AUTHORITY_URL + TOKEN_ENDPOINT,
     authorize_url=AUTHORITY_URL + AUTH_ENDPOINT)
 
-@APP.route('/')
+@APP.route('/welcome')
 def homepage():
     """Render the home page."""
     return flask.render_template('homepage.html', sample='Flask-OAuthlib')

@@ -1,10 +1,10 @@
 {
   "name": "OneDrive Votiro SDS Example",
-  "logo": "/",
+  "logo": "http://cdn.windowsreport.com/wp-content/uploads/2017/03/OneDrive-1.png",
   "repository": "https://github.com/doria90/graphAPI",
   "website": "https://www.votiro.com",
   "keywords": ["dropbox", "python", "votiro", "CDR"],
-  "success_url": "/",
+  "success_url": "/welcome",
   "addons": [
     "redistogo"
   ],
