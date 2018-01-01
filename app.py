@@ -32,7 +32,7 @@ app.secret_key = os.environ['FLASK_SECRET_KEY']
 #############################################################################
 
 
-OAUTH = OAuth(APP)
+OAUTH = OAuth(app)
 MSGRAPH = OAUTH.remote_app(
     'microsoft', consumer_key=CLIENT_ID, consumer_secret=CLIENT_SECRET,
     request_token_params={'scope': SCOPES},
@@ -41,19 +41,19 @@ MSGRAPH = OAUTH.remote_app(
     access_token_url=AUTHORITY_URL + TOKEN_ENDPOINT,
     authorize_url=AUTHORITY_URL + AUTH_ENDPOINT)
 
-@APP.route('/')
-@APP.route('/welcome')
+@app.route('/')
+@app.route('/welcome')
 def homepage():
     """Render the home page."""
     return flask.render_template('homepage.html', sample='Flask-OAuthlib')
 
-@APP.route('/login')
+@app.route('/login')
 def login():
     """Prompt user to authenticate."""
     flask.session['state'] = str(uuid.uuid4())
     return MSGRAPH.authorize(callback=config.REDIRECT_URI, state=flask.session['state'])
 
-@APP.route('/login/authorized')
+@app.route('/login/authorized')
 def authorized():
     """Handler for the application's Redirect Uri."""
     if str(flask.session['state']) != str(flask.request.args['state']):
@@ -66,7 +66,7 @@ def authorized():
 def validate_request():
     '''Validate that the request is properly signed by Dropbox.
        (If not, this is a spoofed webhook.)'''
-    global APP_SECRET
+    global CLIENT_SECRET
     zero_length = request.headers.get('Content-Length')
     if zero_length != '0':
         return False
@@ -80,7 +80,7 @@ def challenge():
     if not validate_request(): abort(403)
     return 
 
-@APP.route('/graphcall')
+@app.route('/graphcall')
 def graphcall():
     """Confirm user authentication by calling Graph and displaying some data."""
     #redirect to onedrive
@@ -109,4 +109,4 @@ def get_token():
     return (flask.session.get('access_token'), '')
 
 if __name__ == '__main__':
-    APP.run()
+    app.run()
