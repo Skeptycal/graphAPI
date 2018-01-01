@@ -4,6 +4,7 @@
 import uuid
 import redis
 import flask
+import os
 from flask_oauthlib.client import OAuth
 
 redis_url = os.environ['REDISTOGO_URL']
