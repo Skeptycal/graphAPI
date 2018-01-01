@@ -77,7 +77,7 @@ def validate_request():
 @app.route('/webhook', methods=['POST'])
 def webhook():
     '''Respond to the webhook challenge (POST request) by echoing back the challenge parameter.'''
-    print 'in webhook' + request.args
+    print request.args
     if request.args.has_key('validationtoken'):
         print 'in '
         js = """{{0}}""".format(request.args.get('validationtoken'))
