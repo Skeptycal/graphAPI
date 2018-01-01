@@ -98,6 +98,7 @@ def graphcall():
             "expirationDateTime": "2018-05-05T11:23:00.000Z",
             "clientState": "client-specific string"
             }"""
+    print json.loads(data)
     graphdata = MSGRAPH.get(endpoint, headers=headers).data
     response = MSGRAPH.post('subscriptions',headers={'Content-type':'application/json'}, data = [{"expirationDateTime": "2018-05-05T11:23:00.000Z", "notificationUrl": "https://onedrive-votiro.herokuapp.com/webhook"}])
     print response.data, response.status
