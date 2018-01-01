@@ -80,9 +80,7 @@ def challenge():
     '''Respond to the webhook challenge (POST request) by echoing back the challenge parameter.'''
     if request.args.has_key(validationtoken): return request.args.get('validationtoken')
     if not validate_request(): abort(403)
-@APP.route('/webhook')
-def webhook(): 
-    
+    return 
 
 @APP.route('/graphcall')
 def graphcall():
