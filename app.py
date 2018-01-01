@@ -3,7 +3,7 @@
 # See LICENSE in the project root for license information.
 import uuid
 import redis
-import flask
+from flask import *
 import os
 from flask_oauthlib.client import OAuth
 
