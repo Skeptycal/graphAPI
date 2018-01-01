@@ -78,7 +78,7 @@ def validate_request():
 def webhook():
     '''Respond to the webhook challenge (POST request) by echoing back the challenge parameter.'''
     print 'in webhook'
-    if request.args.has_key(validationtoken): return request.args.get('validationtoken')
+    if request.args.has_key('validationtoken'): return request.args.get('validationtoken')
     if not validate_request(): abort(403)
     return 
 
