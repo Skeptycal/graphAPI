@@ -1,0 +1,26 @@
+{
+  "name": "OneDrive Votiro SDS Example",
+  "logo": "/",
+  "repository": "https://github.com/doria90/graphAPI",
+  "website": "https://www.votiro.com",
+  "keywords": ["dropbox", "python", "votiro", "CDR"],
+  "success_url": "/",
+  "addons": [
+    "redistogo"
+  ],
+  "env": {
+    "CLIENT_ID": {
+      "description": "Your Microsoft Graph app client id"
+    },
+    "CLIENT_SECRET": {
+      "description": "Your Microsoft Graph app client secret"
+    },
+    "VOTIRO_API_KEY": {
+      "description": "Your Votiro API key (for more info, contact us at https://www.votiro.com)"
+    },
+    "FLASK_SECRET_KEY": {
+      "description": "A secret key for cookie signing",
+      "generator": "secret"
+    }
+  }
+}
