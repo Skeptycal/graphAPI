@@ -32,6 +32,7 @@ app.debug = True
 app.secret_key = os.environ['FLASK_SECRET_KEY']
 #############################################################################
 
+ACCESS_TOKEN = None
 
 OAUTH = OAuth(app)
 MSGRAPH = OAUTH.remote_app(
@@ -57,10 +58,12 @@ def login():
 @app.route('/login/authorized')
 def authorized():
     """Handler for the application's Redirect Uri."""
+    global ACCESS_TOKEN
     if str(session['state']) != str(request.args['state']):
         raise Exception('state returned to redirect URL does not match!')
     response = MSGRAPH.authorized_response()
     session['access_token'] = response['access_token']
+    ACCESS_TOKEN = session['access_token']
     return redirect('/graphcall')
 
 
@@ -71,7 +74,7 @@ def getDelta():
            'client-request-id': str(uuid.uuid4()),
            'return-client-request-id': 'true'
            }
-    return json.loads(MSGRAPH.get(location, headers=headers, token=session.get('access_token')).data)
+    return json.loads(MSGRAPH.get(location, headers=headers, token=).data)
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -120,7 +123,9 @@ def graphcall():
 @MSGRAPH.tokengetter
 def get_token():
     """Called by flask_oauthlib.client to retrieve current access token."""
-    return (session.get('access_token'), '')
+    global ACCESS_TOKEN
+    #return (session.get('access_token'), '')
+    return (ACCESS_TOKEN, '')
 
 if __name__ == '__main__':
     app.run()
