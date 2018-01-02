@@ -7,6 +7,7 @@ from flask import *
 import os
 import json
 from flask_oauthlib.client import OAuth
+import requests
 
 redis_url = os.environ['REDISTOGO_URL']
 redis_client = redis.from_url(redis_url)
@@ -77,7 +78,8 @@ def getDelta():
            'return-client-request-id': 'true'
            }
     print ACCESS_TOKEN
-    return json.loads(MSGRAPH.get(location, headers=headers, token=ACCESS_TOKEN).data)
+    return json.loads(requests.get(RESOURCE + API_VERSION + '/' + location, auth=MSGRAPH)
+    #return json.loads(MSGRAPH.get(location, headers=headers, token=ACCESS_TOKEN).data)
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
