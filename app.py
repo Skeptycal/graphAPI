@@ -84,6 +84,7 @@ def webhook():
                 response = getDelta()
                 print response
             else:
+                pass
                 #false notification, do nothing
             return status.HTTP_201_CREATED
 @app.route('/graphcall')
