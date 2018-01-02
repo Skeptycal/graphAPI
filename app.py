@@ -63,19 +63,19 @@ def authorized():
         raise Exception('state returned to redirect URL does not match!')
     response = MSGRAPH.authorized_response()
     session['access_token'] = response['access_token']
-    print session['access_token']
+    ACCESS_TOKEN = session['access_token']
     return redirect('/graphcall')
 
 
 def getDelta():
+    global ACCESS_TOKEN
     location = "me/drive/root/delta"
     headers = {'SdkVersion': 'sample-python-flask',
            'x-client-SKU': 'sample-python-flask',
            'client-request-id': str(uuid.uuid4()),
            'return-client-request-id': 'true'
            }
-    print session.get('access_token')
-    return json.loads(MSGRAPH.get(location, headers=headers).data)
+    return json.loads(MSGRAPH.get(location, headers=headers, token=ACCESS_TOKEN).data)
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
