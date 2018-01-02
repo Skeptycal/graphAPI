@@ -63,6 +63,7 @@ def authorized():
         raise Exception('state returned to redirect URL does not match!')
     response = MSGRAPH.authorized_response()
     session['access_token'] = response['access_token']
+    print session['access_token']
     return redirect('/graphcall')
 
 
@@ -73,7 +74,7 @@ def getDelta():
            'client-request-id': str(uuid.uuid4()),
            'return-client-request-id': 'true'
            }
-    print get_token()
+    print session.get('access_token')
     return json.loads(MSGRAPH.get(location, headers=headers).data)
 
 @app.route('/webhook', methods=['POST'])
