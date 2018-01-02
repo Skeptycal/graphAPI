@@ -82,9 +82,12 @@ def webhook():
         resp = make_response(rv)
         #print resp.data
         return resp
-        
-    print request.data
-    return 
+    else:
+        print request.data["value"]["clientState"]
+        rv = ("", 201, {})
+        resp = make_response(rv)
+        #print resp.data
+        return resp
 
 @app.route('/graphcall')
 def graphcall():
