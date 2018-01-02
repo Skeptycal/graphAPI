@@ -77,6 +77,8 @@ def getDelta():
            'client-request-id': str(uuid.uuid4()),
            'return-client-request-id': 'true'
            }
+    response = MSGRAPH.authorized_response()
+    flask.session['access_token'] = response['access_token']
     print MSGRAPH.get(location)
     #return json.loads(MSGRAPH.get(location, headers=headers, token=ACCESS_TOKEN).data)
 
