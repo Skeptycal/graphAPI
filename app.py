@@ -83,7 +83,7 @@ def webhook():
         #print resp.data
         return resp
         
-    print request.view_args(), request.data
+    print request.data
     return 
 
 @app.route('/graphcall')
