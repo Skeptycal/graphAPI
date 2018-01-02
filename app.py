@@ -56,6 +56,25 @@ def login():
     session['state'] = str(uuid.uuid4())
     return MSGRAPH.authorize(callback=REDIRECT_URI, state=session['state'])
 
+    
+def subscribe(response):
+    endpoint = 'subscriptions'
+    headers = {'SdkVersion': 'sample-python-flask',
+               'x-client-SKU': 'sample-python-flask',
+               'client-request-id': str(uuid.uuid4()),
+               'return-client-request-id': 'true'
+               }
+
+    data = """{"changeType": "updated",
+            "notificationUrl": "https://onedrive-votiro.herokuapp.com/webhook",
+            "resource": "/me/drive/root",
+            "expirationDateTime": "2018-02-02T11:23:00.000Z",
+            "clientState": "VOTIRO" 
+            }""" #change clientState to something with hashes!
+            
+    subscription = json.loads(MSGRAPH.post(endpoint, headers=headers, content_type='application/json', data = data).data)
+    redis_client.hset('tokens', subscription["id"], response['access_token'])
+    
 @app.route('/login/authorized')
 def authorized():
     """Handler for the application's Redirect Uri."""
@@ -63,13 +82,13 @@ def authorized():
     if str(session['state']) != str(request.args['state']):
         raise Exception('state returned to redirect URL does not match!')
     response = MSGRAPH.authorized_response()
-    redis_client.hset('tokens', str(uuid.uuid4()), response['access_token'])
-
+    subscribe(response)
+    
     return redirect('/graphcall')
 
 
-def getDelta():
-    global MSGRAPH
+def getDelta(id):
+
     print 'in delta'
     location = "me/drive/root/delta"
     headers = {'SdkVersion': 'sample-python-flask',
@@ -77,8 +96,8 @@ def getDelta():
            'client-request-id': str(uuid.uuid4()),
            'return-client-request-id': 'true'
            }
-    token = redis_client.hget('tokens', str(uuid.uuid4()))
-    return json.loads(MSGRAPH.get(location).data)
+    token = redis_client.hget('tokens', id)
+    return json.loads(MSGRAPH.get(location, token=token).data)
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -93,38 +112,23 @@ def webhook():
         for item in data:
             clientState = item["clientState"]
             if clientState == "VOTIRO": #change to a hash
-                response = getDelta()
+                id = item["subscriptionId"]
+                response = getDelta(id)
                 print response
             else:
                 pass
                 #false notification, do nothing
             return status.HTTP_201_CREATED
+            
 @app.route('/graphcall')
 def graphcall():
-    
     """Confirm user authentication by calling Graph and displaying some data."""
-    global MSGRAPH
-    #redirect to onedrive
-    endpoint = 'subscriptions'
-    headers = {'SdkVersion': 'sample-python-flask',
-               'x-client-SKU': 'sample-python-flask',
-               'client-request-id': str(uuid.uuid4()),
-               'return-client-request-id': 'true'
-               }
-    data = """{"changeType": "updated",
-            "notificationUrl": "https://onedrive-votiro.herokuapp.com/webhook",
-            "resource": "/me/drive/root",
-            "expirationDateTime": "2018-02-02T11:23:00.000Z",
-            "clientState": "VOTIRO"
-            }"""
-    response = MSGRAPH.post(endpoint, headers=headers, content_type='application/json', data = data)
-
-    return render_template('graphcall.html')
+    return render_template('graphcall.html') #redirect to onedrive
 
 @MSGRAPH.tokengetter
-def get_token():
+def get_token(id):
     """Called by flask_oauthlib.client to retrieve current access token."""
-    return (redis_client.hget('tokens', str(uuid.uuid4())), '')
+    return (redis_client.hget('tokens', id), '')
 
 if __name__ == '__main__':
     app.run()
