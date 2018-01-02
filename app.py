@@ -84,7 +84,7 @@ def webhook():
         #resp = Response(response=js, status=200, content_type='text/plain')
         return resp
         
-    elif not validate_request(): abort(403)
+    else: print request.args
     return 
 
 @app.route('/graphcall')
