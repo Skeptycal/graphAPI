@@ -56,8 +56,14 @@ def login():
     session['state'] = str(uuid.uuid4())
     return MSGRAPH.authorize(callback=REDIRECT_URI, state=session['state'])
 
-    
-def subscribe(response):
+
+@app.route('/login/authorized')
+def authorized():
+    """Handler for the application's Redirect Uri."""
+
+    if str(session['state']) != str(request.args['state']):
+        raise Exception('state returned to redirect URL does not match!')
+    response = MSGRAPH.authorized_response()
     endpoint = 'subscriptions'
     headers = {'SdkVersion': 'sample-python-flask',
                'x-client-SKU': 'sample-python-flask',
@@ -74,15 +80,6 @@ def subscribe(response):
             
     subscription = json.loads(MSGRAPH.post(endpoint, headers=headers, content_type='application/json', data = data, token = response['access_token']).data)
     redis_client.hset('tokens', subscription["id"], response['access_token'])
-    
-@app.route('/login/authorized')
-def authorized():
-    """Handler for the application's Redirect Uri."""
-
-    if str(session['state']) != str(request.args['state']):
-        raise Exception('state returned to redirect URL does not match!')
-    response = MSGRAPH.authorized_response()
-    subscribe(response)
     
     return redirect('/graphcall')
 
