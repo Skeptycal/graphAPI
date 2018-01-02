@@ -77,7 +77,7 @@ def getDelta():
            'client-request-id': str(uuid.uuid4()),
            'return-client-request-id': 'true'
            }
-    token = redis_client.hget('tokens', str(uuid.uuid4())
+    token = redis_client.hget('tokens', str(uuid.uuid4()))
     return json.loads(MSGRAPH.get(location).data)
 
 @app.route('/webhook', methods=['POST'])
@@ -124,7 +124,7 @@ def graphcall():
 @MSGRAPH.tokengetter
 def get_token():
     """Called by flask_oauthlib.client to retrieve current access token."""
-    return (redis_client.hget('tokens', str(uuid.uuid4()), '')
+    return (redis_client.hget('tokens', str(uuid.uuid4())), '')
 
 if __name__ == '__main__':
     app.run()
