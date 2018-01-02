@@ -64,8 +64,8 @@ def authorized():
     if str(session['state']) != str(request.args['state']):
         raise Exception('state returned to redirect URL does not match!')
     response = MSGRAPH.authorized_response()
-    print response['access_token']
     session['access_token'] = response['access_token']
+    
     endpoint = 'subscriptions'
     headers = {'SdkVersion': 'sample-python-flask',
                'x-client-SKU': 'sample-python-flask',
@@ -80,7 +80,7 @@ def authorized():
             "clientState": "VOTIRO" 
             }""" #change clientState to something with hashes!
             
-    subscription = json.loads(MSGRAPH.post(endpoint, headers=headers, content_type='application/json', data = data, token = response['access_token']).data)
+    subscription = json.loads(MSGRAPH.post(endpoint, headers=headers, content_type='application/json', data = data).data)
     redis_client.hset('tokens', subscription["id"], response['access_token'])
     
     return redirect('/graphcall')
