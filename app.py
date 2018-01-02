@@ -66,7 +66,12 @@ def authorized():
 
 def getDelta():
     location = "me/drive/root/delta"
-    return json.loads(MSGRAPH.get(location).data)
+    headers = {'SdkVersion': 'sample-python-flask',
+           'x-client-SKU': 'sample-python-flask',
+           'client-request-id': str(uuid.uuid4()),
+           'return-client-request-id': 'true'
+           }
+    return json.loads(MSGRAPH.get(location, headers=headers).data)
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
