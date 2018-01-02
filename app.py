@@ -80,11 +80,10 @@ def webhook():
     if request.args.has_key('validationToken'):
         rv = (request.args.get('validationToken'), 200, {'Content-Type':'text/plain'})
         resp = make_response(rv)
-        print resp.data
-        #resp = Response(response=js, status=200, content_type='text/plain')
+        #print resp.data
         return resp
         
-    else: print request.args
+    else: print dir(request)
     return 
 
 @app.route('/graphcall')
