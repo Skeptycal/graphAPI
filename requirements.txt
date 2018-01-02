@@ -3,4 +3,3 @@ Flask-OAuthlib>=0.9.4
 gunicorn==19.7.1
 requests==2.18.4
 redis==2.10.6
-requests
