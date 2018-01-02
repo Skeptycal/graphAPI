@@ -69,7 +69,7 @@ def authorized():
 
 
 def getDelta():
-    global ACCESS_TOKEN
+    global MSGRAPH
     print 'in delta'
     location = "me/drive/root/delta"
     headers = {'SdkVersion': 'sample-python-flask',
@@ -77,8 +77,7 @@ def getDelta():
            'client-request-id': str(uuid.uuid4()),
            'return-client-request-id': 'true'
            }
-    print ACCESS_TOKEN
-    print MSGRAPH.get(location, token=ACCESS_TOKEN)
+    print MSGRAPH.get(location)
     #return json.loads(MSGRAPH.get(location, headers=headers, token=ACCESS_TOKEN).data)
 
 @app.route('/webhook', methods=['POST'])
@@ -102,7 +101,9 @@ def webhook():
             return status.HTTP_201_CREATED
 @app.route('/graphcall')
 def graphcall():
+    
     """Confirm user authentication by calling Graph and displaying some data."""
+    global MSGRAPH
     #redirect to onedrive
     endpoint = 'subscriptions'
     headers = {'SdkVersion': 'sample-python-flask',
@@ -116,7 +117,6 @@ def graphcall():
             "expirationDateTime": "2018-02-02T11:23:00.000Z",
             "clientState": "VOTIRO"
             }"""
-
     response = MSGRAPH.post(endpoint, headers=headers, content_type='application/json', data = data)
 
     return render_template('graphcall.html')
