@@ -126,9 +126,9 @@ def graphcall():
     return render_template('graphcall.html') #redirect to onedrive
 
 @MSGRAPH.tokengetter
-def get_token(id):
+def get_token():
     """Called by flask_oauthlib.client to retrieve current access token."""
-    return (redis_client.hget('tokens', id), '')
+    return (redis_client.hget('tokens', str(uuid.uuid4())), '')
 
 if __name__ == '__main__':
     app.run()
