@@ -78,7 +78,7 @@ def getDelta():
            'return-client-request-id': 'true'
            }
     print ACCESS_TOKEN
-    return json.loads(requests.get(RESOURCE + API_VERSION + '/' + location, auth=MSGRAPH)
+    return json.loads(requests.get(RESOURCE + API_VERSION + '/' + location, auth=MSGRAPH))
     #return json.loads(MSGRAPH.get(location, headers=headers, token=ACCESS_TOKEN).data)
 
 @app.route('/webhook', methods=['POST'])
