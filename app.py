@@ -64,15 +64,9 @@ def authorized():
     return redirect('/graphcall')
 
 
-def validate_request():
-    '''Validate that the request is properly signed by Dropbox.
-       (If not, this is a spoofed webhook.)'''
-    global CLIENT_SECRET
-    zero_length = request.headers.get('Content-Length')
-    if zero_length != '0':
-        return False
-    else:
-        return True
+def getDelta():
+    location = "me/drive/root/delta"
+    return json.loads(MSGRAPH.get(location).data)
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -83,12 +77,15 @@ def webhook():
         #print resp.data
         return resp
     else:
-        print json.loads(request.data)
-        rv = ("", 201, {})
-        resp = make_response(rv)
-        #print resp.data
-        return resp
-
+        data = json.loads(request.data)["value"]
+        for item in data:
+            clientState = item["clientState"]
+            if clientState == "VOTIRO": #change to a hash
+                response = getDelta()
+                print response
+            else:
+                #false notification, do nothing
+            return status.HTTP_201_CREATED
 @app.route('/graphcall')
 def graphcall():
     """Confirm user authentication by calling Graph and displaying some data."""
