@@ -71,7 +71,7 @@ def getDelta():
            'client-request-id': str(uuid.uuid4()),
            'return-client-request-id': 'true'
            }
-    return json.loads(MSGRAPH.get(location, headers=headers).data)
+    return json.loads(MSGRAPH.get(location, headers=headers, token=session.get('access_token')).data)
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
