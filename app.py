@@ -64,7 +64,7 @@ def authorized():
     if str(session['state']) != str(request.args['state']):
         raise Exception('state returned to redirect URL does not match!')
     response = MSGRAPH.authorized_response()
-    flask.session['access_token'] = response['access_token']
+    session['access_token'] = response['access_token']
     endpoint = 'subscriptions'
     headers = {'SdkVersion': 'sample-python-flask',
                'x-client-SKU': 'sample-python-flask',
@@ -127,7 +127,7 @@ def graphcall():
 def get_token():
     """Called by flask_oauthlib.client to retrieve current access token."""
     #return (redis_client.hget('tokens', str(uuid.uuid4())), '')
-    return (flask.session.get('access_token'), '')
+    return (session.get('access_token'), '')
     
 
 if __name__ == '__main__':
