@@ -83,7 +83,7 @@ def webhook():
         #print resp.data
         return resp
     else:
-        print request.data["value"]["clientState"]
+        print json.loads(request.data)["value"]["clientState"]
         rv = ("", 201, {})
         resp = make_response(rv)
         #print resp.data
