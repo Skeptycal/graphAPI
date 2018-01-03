@@ -81,7 +81,7 @@ def authorized():
             }""" #change clientState to something with hashes!
             
     subscription = MSGRAPH.post(endpoint, headers=headers, content_type='application/json', data = data).data
-    print subscription
+    #print subscription
     redis_client.hset('tokens', session.get('state'), response['access_token'])
     
     return redirect('/graphcall')
@@ -114,7 +114,7 @@ def webhook():
         for item in data:
             clientState = item["clientState"]
             if clientState == "VOTIRO": #change to a hash
-                id = item["subscriptionId"]
+                id = session.get('state')#item["subscriptionId"]
                 response = getDelta(id)
                 print response
             else:
