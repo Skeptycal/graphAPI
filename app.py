@@ -109,7 +109,7 @@ def getDelta(id):
     print token, id
     '''
     
-    return json.loads(MSGRAPH.get(location, token=id).data)
+    return json.loads(MSGRAPH.request(url=location,method='GET', token=id).data)
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
