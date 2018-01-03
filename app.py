@@ -84,7 +84,7 @@ def authorized():
             }""" #change clientState to something with hashes!
             
     subscription = MSGRAPH.post(endpoint, headers=headers, content_type='application/json', data = data).data
-    #print subscription
+    print subscription
     redis_client.hset('tokens', subscription["id"], response['access_token'])
     
     return redirect('/graphcall')
