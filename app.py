@@ -147,7 +147,7 @@ def graphcall():
 @MSGRAPH.tokengetter
 def get_token(id=None):
     """Called by flask_oauthlib.client to retrieve current access token."""
-    if access_token:
+    if id:
         return (redis_client.hget('tokens', id), '')
     #return (session.get('access_token'), '')
     
