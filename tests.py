@@ -10,10 +10,10 @@ redis_client = redis.from_url(redis_url)
  
 CLIENT_ID = '426ed4eb-fc79-443b-9ea9-b94135a230d6'
 CLIENT_SECRET = 'ajvbuIWQ4eaVNEH5822#_@)'
-REDIRECT_URI = 'https://onedrive-votiro.herokuapp.com/login/authorized'
+REDIRECT_URI = 'http://localhost:5000/login/authorized'
 RESOURCE = 'https://graph.microsoft.com/'
 API_VERSION = 'v1.0'
-SCOPES = ['User.Read','Files.Read', 'Files.Read.All', 'Files.ReadWrite', 'Files.ReadWrite.All'] 
+SCOPES = ['User.Read','Files.Read.All', 'Files.ReadWrite.All'] 
 AUTHORITY_URL = 'https://login.microsoftonline.com/common'
 AUTH_ENDPOINT = '/oauth2/v2.0/authorize'
 TOKEN_ENDPOINT = '/oauth2/v2.0/token'

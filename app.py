@@ -66,13 +66,16 @@ def authorized():
     response = MSGRAPH.authorized_response()
     session['access_token'] = response['access_token']
     
-    endpoint = 'subscriptions'
+    endpoint = 'me'
     headers = {'SdkVersion': 'sample-python-flask',
                'x-client-SKU': 'sample-python-flask',
                'client-request-id': session.get('state'),
                'return-client-request-id': 'true'
                }
-
+    graphdata = MSGRAPH.get(endpoint, headers=headers).data
+    redis_client.hset('tokens', graphdata["id"], response['access_token'])
+    
+    endpoint = 'subscriptions'
     data = """{"changeType": "updated",
             "notificationUrl": "https://onedrive-votiro.herokuapp.com/webhook",
             "resource": "/me/drive/root",
@@ -82,7 +85,7 @@ def authorized():
             
     subscription = MSGRAPH.post(endpoint, headers=headers, content_type='application/json', data = data).data
     #print subscription
-    redis_client.hset('tokens', session.get('state'), response['access_token'])
+    redis_client.hset('tokens', subscription["id"], response['access_token'])
     
     return redirect('/graphcall')
 
