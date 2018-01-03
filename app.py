@@ -64,7 +64,7 @@ def authorized():
     if str(session['state']) != str(request.args['state']):
         raise Exception('state returned to redirect URL does not match!')
     response = MSGRAPH.authorized_response()
-
+    session['access_token'] = response['access_token']
     try:
         '''
         endpoint = 'me'
@@ -104,10 +104,11 @@ def getDelta(id):
            'client-request-id': str(uuid.uuid4()),
            'return-client-request-id': 'true'
            }
-    '''
+    
     token = redis_client.hget('tokens', id)
     print token, id
-    return json.loads(MSGRAPH.get(location, token=token).data)
+    '''
+    return json.loads(MSGRAPH.get(location, token=id).data)
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -149,7 +150,8 @@ def get_token(id=None):
     """Called by flask_oauthlib.client to retrieve current access token."""
     if id:
         return (redis_client.hget('tokens', id), '')
-    #return (session.get('access_token'), '')
+    else:
+        return (session.get('access_token'), '')
     
 
 if __name__ == '__main__':
