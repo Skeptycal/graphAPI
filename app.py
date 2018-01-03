@@ -87,7 +87,7 @@ def authorized():
         print subscription
         redis_client.hset('tokens', subscription["id"], response['access_token'])
     except Exception as e:
-        print e
+        print e.message
         pass
     return redirect('/graphcall')
 
@@ -119,15 +119,20 @@ def webhook():
         data = json.loads(request.data)["value"]
         print data
         for item in data:
-            clientState = item["clientState"]
-            if clientState == "VOTIRO": #change to a hash
-                id = item["subscriptionId"]
-                response = getDelta(id)
-                print response
-            else:
+            try:
+                clientState = item["clientState"]
+                if clientState == "VOTIRO": #change to a hash
+                    id = item["subscriptionId"]
+                    response = getDelta(id)
+                    print response
+                else:
+                    pass
+                    #false notification, do nothing
+            except Exception as e:
+                print e.message
                 pass
-                #false notification, do nothing
-            return status.HTTP_201_CREATED
+            finally:
+                return status.HTTP_201_CREATED
             
 @app.route('/graphcall')
 def graphcall():
