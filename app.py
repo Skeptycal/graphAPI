@@ -86,7 +86,7 @@ def authorized():
         subscription = MSGRAPH.post(endpoint, content_type='application/json', data = data).data
         print subscription
         redis_client.hset('tokens', subscription["id"], response['access_token'])
-    except Exception e:
+    except Exception as e:
         print e
         pass
     return redirect('/graphcall')
