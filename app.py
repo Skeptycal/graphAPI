@@ -91,11 +91,13 @@ def getDelta(id):
 
     print 'in delta'
     location = "me/drive/root/delta"
+    '''
     headers = {'SdkVersion': 'sample-python-flask',
            'x-client-SKU': 'sample-python-flask',
            'client-request-id': str(uuid.uuid4()),
            'return-client-request-id': 'true'
            }
+    '''
     token = redis_client.hget('tokens', id)
     return json.loads(MSGRAPH.get(location, token=token).data)
 
