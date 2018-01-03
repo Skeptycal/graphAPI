@@ -64,12 +64,13 @@ def authorized():
     if str(session['state']) != str(request.args['state']):
         raise Exception('state returned to redirect URL does not match!')
     response = MSGRAPH.authorized_response()
+    print response
     session['access_token'] = response['access_token']
     
     endpoint = 'subscriptions'
     headers = {'SdkVersion': 'sample-python-flask',
                'x-client-SKU': 'sample-python-flask',
-               'client-request-id': str(uuid.uuid4()),
+               'client-request-id': session.get('state'),
                'return-client-request-id': 'true'
                }
 
