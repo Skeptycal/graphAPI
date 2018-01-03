@@ -64,7 +64,6 @@ def authorized():
     if str(session['state']) != str(request.args['state']):
         raise Exception('state returned to redirect URL does not match!')
     response = MSGRAPH.authorized_response()
-    print response
     session['access_token'] = response['access_token']
     
     endpoint = 'subscriptions'
@@ -83,7 +82,7 @@ def authorized():
             
     subscription = MSGRAPH.post(endpoint, headers=headers, content_type='application/json', data = data).data
     print subscription
-    redis_client.hset('tokens', subscription["id"], response['access_token'])
+    redis_client.hset('tokens', session.get('state'), response['access_token'])
     
     return redirect('/graphcall')
 
