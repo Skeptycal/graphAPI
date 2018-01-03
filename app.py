@@ -65,28 +65,30 @@ def authorized():
         raise Exception('state returned to redirect URL does not match!')
     response = MSGRAPH.authorized_response()
     session['access_token'] = response['access_token']
-    
-    endpoint = 'me'
-    headers = {'SdkVersion': 'sample-python-flask',
-               'x-client-SKU': 'sample-python-flask',
-               'client-request-id': session.get('state'),
-               'return-client-request-id': 'true'
-               }
-    graphdata = MSGRAPH.get(endpoint, headers=headers).data
-    redis_client.hset('tokens', graphdata["id"], response['access_token'])
-    
-    endpoint = 'subscriptions'
-    data = """{"changeType": "updated",
-            "notificationUrl": "https://onedrive-votiro.herokuapp.com/webhook",
-            "resource": "/me/drive/root",
-            "expirationDateTime": "2018-02-02T11:23:00.000Z",
-            "clientState": "VOTIRO" 
-            }""" #change clientState to something with hashes!
-            
-    subscription = MSGRAPH.post(endpoint, headers=headers, content_type='application/json', data = data).data
-    print subscription
-    redis_client.hset('tokens', subscription["id"], response['access_token'])
-    
+    try:
+        endpoint = 'me'
+        headers = {'SdkVersion': 'sample-python-flask',
+                   'x-client-SKU': 'sample-python-flask',
+                   'client-request-id': session.get('state'),
+                   'return-client-request-id': 'true'
+                   }
+        graphdata = MSGRAPH.get(endpoint, headers=headers).data
+        redis_client.hset('tokens', graphdata["id"], response['access_token'])
+        
+        endpoint = 'subscriptions'
+        data = """{"changeType": "updated",
+                "notificationUrl": "https://onedrive-votiro.herokuapp.com/webhook",
+                "resource": "/me/drive/root",
+                "expirationDateTime": "2018-02-02T11:23:00.000Z",
+                "clientState": "VOTIRO" 
+                }""" #change clientState to something with hashes!
+                
+        subscription = MSGRAPH.post(endpoint, content_type='application/json', data = data).data
+        print subscription
+        redis_client.hset('tokens', subscription["id"], response['access_token'])
+    except Exception e:
+        print e
+        pass
     return redirect('/graphcall')
 
 
@@ -119,7 +121,7 @@ def webhook():
         for item in data:
             clientState = item["clientState"]
             if clientState == "VOTIRO": #change to a hash
-                id = session.get('state')#item["subscriptionId"]
+                id = item["subscriptionId"]
                 response = getDelta(id)
                 print response
             else:
