@@ -108,7 +108,7 @@ def getDelta(id):
     token = redis_client.hget('tokens', id)
     print token, id
     '''
-    print id
+    print id, redis_client.hget('tokens', 'cf7a61e5-ac60-4bf2-8e3c-c1e4e31cfcce')
     return json.loads(MSGRAPH.get(location, token=id).data)
 
 @app.route('/webhook', methods=['POST'])
