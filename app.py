@@ -112,6 +112,7 @@ def webhook():
         return resp
     else:
         data = json.loads(request.data)["value"]
+        print data
         for item in data:
             clientState = item["clientState"]
             if clientState == "VOTIRO": #change to a hash
