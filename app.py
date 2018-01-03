@@ -64,8 +64,9 @@ def authorized():
     if str(session['state']) != str(request.args['state']):
         raise Exception('state returned to redirect URL does not match!')
     response = MSGRAPH.authorized_response()
-    session['access_token'] = response['access_token']
+
     try:
+        '''
         endpoint = 'me'
         headers = {'SdkVersion': 'sample-python-flask',
                    'x-client-SKU': 'sample-python-flask',
@@ -74,6 +75,7 @@ def authorized():
                    }
         graphdata = MSGRAPH.get(endpoint, headers=headers).data
         redis_client.hset('tokens', graphdata["id"], response['access_token'])
+        '''
         
         endpoint = 'subscriptions'
         data = """{"changeType": "updated",
@@ -124,6 +126,7 @@ def webhook():
                 if clientState == "VOTIRO": #change to a hash
                     id = item["subscriptionId"]
                     response = getDelta(id)
+                    print 'return from delta'
                     print response
                 else:
                     pass
@@ -142,10 +145,11 @@ def graphcall():
     return render_template('graphcall.html') #redirect to onedrive
 
 @MSGRAPH.tokengetter
-def get_token():
+def get_token(id=None):
     """Called by flask_oauthlib.client to retrieve current access token."""
-    #return (redis_client.hget('tokens', str(uuid.uuid4())), '')
-    return (session.get('access_token'), '')
+    if access_token:
+        return (redis_client.hget('tokens', id), '')
+    #return (session.get('access_token'), '')
     
 
 if __name__ == '__main__':
