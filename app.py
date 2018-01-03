@@ -132,7 +132,9 @@ def webhook():
                 print e.message
                 pass
             finally:
-                return status.HTTP_201_CREATED
+                rv = ('', 201, {})
+                resp = make_response(rv)
+                return resp
             
 @app.route('/graphcall')
 def graphcall():
