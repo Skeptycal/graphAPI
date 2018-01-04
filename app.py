@@ -34,7 +34,7 @@ app.secret_key = os.environ['FLASK_SECRET_KEY']
 #############################################################################
 
 
-
+id = None
 OAUTH = OAuth(app)
 MSGRAPH = OAUTH.remote_app(
     'microsoft', consumer_key=CLIENT_ID, consumer_secret=CLIENT_SECRET,
@@ -86,7 +86,7 @@ def authorized():
                 }""" #change clientState to something with hashes!
                 
         subscription = MSGRAPH.post(endpoint, content_type='application/json', data = data).data
-        print subscription
+        print subscriptions
         redis_client.hset('tokens', subscription["id"], response['access_token'])
     except Exception as e:
         print e.message
@@ -94,7 +94,7 @@ def authorized():
     return redirect('/graphcall')
 
 
-def getDelta(id):
+def getDelta():
 
     print 'in delta'
     location = "me/drive/root/delta"
@@ -108,11 +108,12 @@ def getDelta(id):
     token = redis_client.hget('tokens', id)
     print token, id
     '''
-    token = redis_client.hget('tokens', id)
-    return json.loads(MSGRAPH.request(url=location,method='GET', token="{0}".format(token)).data)
+    
+    return json.loads(MSGRAPH.get(location).data)
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
+    global id
     '''Respond to the webhook challenge (POST request) by echoing back the challenge parameter.'''
     if request.args.has_key('validationToken'):
         rv = (request.args.get('validationToken'), 200, {'Content-Type':'text/plain'})
@@ -127,7 +128,7 @@ def webhook():
                 clientState = item["clientState"]
                 if clientState == "VOTIRO": #change to a hash
                     id = item["subscriptionId"]
-                    response = getDelta(id)
+                    response = getDelta()
                     print 'return from delta'
                     print response
                 else:
@@ -147,9 +148,9 @@ def graphcall():
     return render_template('graphcall.html') #redirect to onedrive
 
 @MSGRAPH.tokengetter
-def get_token(id=None):
+def get_token():
     """Called by flask_oauthlib.client to retrieve current access token."""
-    print 'in tokengetter', id
+    global id
     if id:
         print id, redis_client.hget('tokens', id)
         return (redis_client.hget('tokens', id), '')
