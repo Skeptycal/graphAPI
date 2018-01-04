@@ -86,7 +86,7 @@ def authorized():
                 }""" #change clientState to something with hashes!
                 
         subscription = MSGRAPH.post(endpoint, content_type='application/json', data = data).data
-        print subscriptions
+        print subscription
         redis_client.hset('tokens', subscription["id"], response['access_token'])
     except Exception as e:
         print e.message
@@ -153,7 +153,7 @@ def get_token():
     global id
     if id:
         print id, redis_client.hget('tokens', id)
-        return (redis_client.hget('tokens', id), '')
+        return redis_client.hget('tokens', id)
     else:
         return (session.get('access_token'), '')
     
